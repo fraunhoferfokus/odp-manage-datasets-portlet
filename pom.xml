@@ -11,7 +11,7 @@
 	<packaging>war</packaging>
 	<name>Manage Datasets Portlet</name>
 	<scm>
-		<developerConnection>scm:git:git://github.com:fraunhoferfokus/odp-manage-datasets-portlet.git</developerConnection>
+		<developerConnection>scm:git:git://gitlab.fokus.fraunhofer.de:odp-manage-datasets-portlet</developerConnection>
 	</scm>
 	<build>
 		<finalName>${project.artifactId}-${project.version}-${buildNumber}</finalName>
@@ -29,6 +29,11 @@
 		</plugins>
 	</build>
 	<dependencies>
+		<dependency>
+			<groupId>org.primefaces</groupId>
+			<artifactId>primefaces</artifactId>
+			<version>4.0</version>
+		</dependency>
 		<dependency>
 			<groupId>com.liferay.faces</groupId>
 			<artifactId>liferay-faces-bridge-api</artifactId>

@@ -19,32 +19,30 @@
 
 package de.fhg.fokus.odp.portal.managedatasets.validator;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
-import javax.faces.component.UIInput;
 import javax.faces.context.FacesContext;
 import javax.faces.validator.FacesValidator;
 import javax.faces.validator.Validator;
 import javax.faces.validator.ValidatorException;
 import javax.portlet.PortletRequest;
 
+import org.primefaces.context.RequestContext;
+import org.primefaces.event.CloseEvent;
+import org.primefaces.event.ToggleEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.liferay.faces.portal.context.LiferayFacesContext;
 import com.liferay.portal.kernel.language.LanguageUtil;
 
-import de.fhg.fokus.odp.portal.managedatasets.controller.ManageController;
+@FacesValidator(value = "categoryValidator")
+public class CategoryValidator implements Validator {
 
-@FacesValidator("dateTemporalCoverageValidator")
-public class DateTemporalCoverageValidator implements Validator {
-
-	//private static final Logger log = LoggerFactory
-	//		.getLogger(DateTemporalCoverageValidator.class);
+	private static final Logger log = LoggerFactory
+			.getLogger(CategoryValidator.class);
 
 	@Override
 	public void validate(FacesContext context, UIComponent component,
@@ -54,42 +52,28 @@ public class DateTemporalCoverageValidator implements Validator {
 		PortletRequest request = (PortletRequest) lfc.getExternalContext()
 				.getRequest();
 
-		SimpleDateFormat sdf = new SimpleDateFormat(
-				ManageController.DATE_PATTERN);
-
-		UIInput startInput = (UIInput) component.getAttributes().get(
-				"temporal_coverage_from");
-		UIInput endInput = (UIInput) component.getAttributes().get(
-				"temporal_coverage_to");
-
-		try {
-
-			if (startInput != null && endInput != null) {
-
-				Date startDate = sdf.parse((String) startInput
-						.getSubmittedValue());
-				Date endDate = sdf.parse((String) endInput.getSubmittedValue());
-
-				if (!startDate.before(endDate)) {
-
-					FacesMessage msg = new FacesMessage(LanguageUtil.get(
-							request.getLocale(),
-							"od.date.temporal.relation.error"),
-							LanguageUtil.get(request.getLocale(),
-									"od.date.temporal.relation.error"));
-					msg.setSeverity(FacesMessage.SEVERITY_ERROR);
-					throw new ValidatorException(msg);
-				}
-			}
-
-		} catch (ParseException e) {
-			FacesMessage msg = new FacesMessage(LanguageUtil.get(
-					request.getLocale(), "od.date.invalid"), LanguageUtil.get(
-					request.getLocale(), "od.date.invalid"));
-			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
-			throw new ValidatorException(msg);
-		}
+		/*
+		 * @SuppressWarnings("rawtypes") List selectedVals = (List) value; int
+		 * numberOfCaterories = 0; if (selectedVals != null) {
+		 * numberOfCaterories = selectedVals.size(); }
+		 * 
+		 * if (numberOfCaterories > 2) { log.info("numberOfCaterories > 5 == "
+		 * +numberOfCaterories ); FacesMessage message = new
+		 * FacesMessage(FacesMessage.SEVERITY_WARN, "What we do in life",
+		 * "Echoes in eternity.");
+		 * 
+		 * RequestContext.getCurrentInstance().showMessageInDialog(message);
+		 * 
+		 * 
+		 * String message = LanguageUtil.get(request.getLocale(),
+		 * "od.category.reference.toomuch.warn"); FacesMessage msg = new
+		 * FacesMessage(message, message);
+		 * 
+		 * msg.setSeverity(FacesMessage.SEVERITY_ERROR);
+		 * 
+		 * 
+		 * throw new ValidatorException(msg); }
+		 */
 
 	}
-
 }

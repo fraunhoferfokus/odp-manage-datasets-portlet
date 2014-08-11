@@ -42,30 +42,32 @@ import de.fhg.fokus.odp.registry.model.Metadata;
 @ViewScoped
 public class MetadataController implements Serializable {
 
-    /** The Constant serialVersionUID. */
-    private static final long serialVersionUID = 1L;
+	/** The Constant serialVersionUID. */
+	private static final long serialVersionUID = 1L;
 
-    /** The logger. */
-    private final Logger LOG = LoggerFactory.getLogger(getClass());
+	/** The logger. */
+	private final Logger LOG = LoggerFactory.getLogger(getClass());
 
-    /** The metadata. */
-    private Metadata metadata;
+	/** The metadata. */
+	private Metadata metadata;
 
-    @PostConstruct
-    public void init() {
-        LiferayFacesContext lfc = LiferayFacesContext.getInstance();
-        PortletRequest request = (PortletRequest) lfc.getExternalContext().getRequest();
-        PortletSession session = request.getPortletSession();
-        metadata = (Metadata) session.getAttribute("metadata");
-        LOG.debug("Loaded metadata: {}", metadata.getName());
-    }
+	@PostConstruct
+	public void init() {
+		LiferayFacesContext lfc = LiferayFacesContext.getInstance();
+		PortletRequest request = (PortletRequest) lfc.getExternalContext()
+				.getRequest();
+		PortletSession session = request.getPortletSession();
+		metadata = (Metadata) session.getAttribute("metadata");
+		if (metadata != null)
+			LOG.debug("Loaded metadata: {}", metadata.getName());
+	}
 
-    public Metadata getMetadata() {
-        return metadata;
-    }
+	public Metadata getMetadata() {
+		return metadata;
+	}
 
-    public void setMetadata(Metadata metadata) {
-        this.metadata = metadata;
-    }
+	public void setMetadata(Metadata metadata) {
+		this.metadata = metadata;
+	}
 
 }

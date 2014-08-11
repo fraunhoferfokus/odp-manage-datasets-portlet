@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012, 2013 Fraunhofer Institute FOKUS
+ * Copyright (c) 2012, 2014 Fraunhofer Institute FOKUS
  *
  * This file is part of Open Data Platform.
  *
@@ -17,6 +17,11 @@
  * along with Open Data Platform.  If not, see <http://www.gnu.org/licenses/agpl-3.0>.
  */
 
+/**
+ * The Validator for JsonGeo Polygon.
+ * 
+ * @author msg
+ */
 package de.fhg.fokus.odp.portal.managedatasets.validator;
 
 import javax.faces.application.FacesMessage;
@@ -27,27 +32,36 @@ import javax.faces.validator.Validator;
 import javax.faces.validator.ValidatorException;
 import javax.portlet.PortletRequest;
 
-import org.apache.commons.validator.routines.EmailValidator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.liferay.faces.portal.context.LiferayFacesContext;
 import com.liferay.portal.kernel.language.LanguageUtil;
 
-@FacesValidator(value = "emailValidator")
-public class ODPEmailValidator implements Validator {
+@FacesValidator(value = "nutsValidator")
+public class NutsValidator implements Validator {
 
-    @Override
-    public void validate(FacesContext context, UIComponent component, Object value) throws ValidatorException {
+	private static final Logger log = LoggerFactory
+			.getLogger(NutsValidator.class);
 
-        if (!EmailValidator.getInstance().isValid((String) value)) {
-            LiferayFacesContext lfc = LiferayFacesContext.getInstance();
-            PortletRequest request = (PortletRequest) lfc.getExternalContext().getRequest();
+	@Override
+	public void validate(FacesContext context, UIComponent component,
+			Object value) throws ValidatorException {
 
-            FacesMessage msg = new FacesMessage(LanguageUtil.get(request.getLocale(), "od.email.invalid.error"), LanguageUtil.get(
-                    request.getLocale(), "od.email.invalid.error"));
+		if (value != null && !((String) value).isEmpty()
+				&& !((String) value).matches("^[A-Z]{2}[0-9A-Z]{0,3}$")) {
+			LiferayFacesContext lfc = LiferayFacesContext.getInstance();
+			PortletRequest request = (PortletRequest) lfc.getExternalContext()
+					.getRequest();
+
+			FacesMessage msg = new FacesMessage(LanguageUtil.get(
+					request.getLocale(), "od.nuts.invalid.error"),
+					LanguageUtil.get(request.getLocale(),
+							"od.nuts.invalid.error"));
 			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
 			throw new ValidatorException(msg);
-        }
 
-    }
+		}
+	}
 
 }

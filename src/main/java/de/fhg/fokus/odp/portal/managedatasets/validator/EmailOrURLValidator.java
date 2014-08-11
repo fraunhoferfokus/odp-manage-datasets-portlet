@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012, 2013 Fraunhofer Institute FOKUS
+ * Copyright (c) 2012, 2014 Fraunhofer Institute FOKUS
  *
  * This file is part of Open Data Platform.
  *
@@ -16,7 +16,11 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Open Data Platform.  If not, see <http://www.gnu.org/licenses/agpl-3.0>.
  */
-
+/**
+ * The Validator for email or URL together.
+ * 
+ * @author msg
+ */
 package de.fhg.fokus.odp.portal.managedatasets.validator;
 
 import javax.faces.application.FacesMessage;
@@ -28,26 +32,47 @@ import javax.faces.validator.ValidatorException;
 import javax.portlet.PortletRequest;
 
 import org.apache.commons.validator.routines.EmailValidator;
+import org.apache.commons.validator.routines.UrlValidator;
 
 import com.liferay.faces.portal.context.LiferayFacesContext;
 import com.liferay.portal.kernel.language.LanguageUtil;
 
-@FacesValidator(value = "emailValidator")
-public class ODPEmailValidator implements Validator {
+@FacesValidator(value = "emailorurlValidator")
+public class EmailOrURLValidator implements Validator {
 
-    @Override
-    public void validate(FacesContext context, UIComponent component, Object value) throws ValidatorException {
+	@Override
+	public void validate(FacesContext context, UIComponent component,
+			Object value) throws ValidatorException {
 
-        if (!EmailValidator.getInstance().isValid((String) value)) {
-            LiferayFacesContext lfc = LiferayFacesContext.getInstance();
-            PortletRequest request = (PortletRequest) lfc.getExternalContext().getRequest();
+		if (((String) value).isEmpty()) {
+			throwValidatorException();
+		}
+		else {
+			if (UrlValidator.getInstance().isValid((String) value)) {
+				return;
+			}
+			else if (EmailValidator.getInstance().isValid((String) value)) {
+				return;
+			} else
 
-            FacesMessage msg = new FacesMessage(LanguageUtil.get(request.getLocale(), "od.email.invalid.error"), LanguageUtil.get(
-                    request.getLocale(), "od.email.invalid.error"));
-			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
-			throw new ValidatorException(msg);
-        }
+			{
+				throwValidatorException();
+			}
 
-    }
+		}
+	}
+
+	private void throwValidatorException() {
+		LiferayFacesContext lfc = LiferayFacesContext.getInstance();
+		PortletRequest request = (PortletRequest) lfc
+				.getExternalContext().getRequest();
+
+		FacesMessage msg = new FacesMessage(LanguageUtil.get(
+				request.getLocale(), "od.urloremail.invalid.error"),
+				LanguageUtil.get(request.getLocale(),
+						"od.urloremail.invalid.error"));
+		msg.setSeverity(FacesMessage.SEVERITY_ERROR);
+		throw new ValidatorException(msg);
+	}
 
 }
